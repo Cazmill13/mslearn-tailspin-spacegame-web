@@ -1,8 +1,11 @@
+<<<<<<< HEAD
 # ASP.NET Core
 # Build and test ASP.NET Core projects targeting .NET Core.
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
+=======
+>>>>>>> unit-tests
 trigger:
 - '*'
 
@@ -17,11 +20,17 @@ variables:
   dotnetSdkVersion: '5.x'
 
 steps:
+<<<<<<< HEAD
 
 - task: UseDotNet@2
   displayName: 'Use .NET SDK $(dotnetSdkVersion)'
   inputs:
     packageType: sdk
+=======
+- task: UseDotNet@2
+  displayName: 'Use .NET SDK $(dotnetSdkVersion)'
+  inputs:
+>>>>>>> unit-tests
     version: '$(dotnetSdkVersion)'
 
 - task: Npm@1
@@ -33,7 +42,11 @@ steps:
   displayName: 'Compile Sass assets'
 
 - task: gulp@1
+<<<<<<< HEAD
   displayName: 'Run gulp task'
+=======
+  displayName: 'Run gulp tasks'
+>>>>>>> unit-tests
 
 - script: 'echo "$(Build.DefinitionName), $(Build.BuildId), $(Build.BuildNumber)" > buildinfo.txt'
   displayName: 'Write build info'
@@ -45,6 +58,7 @@ steps:
     command: 'restore'
     projects: '**/*.csproj'
 
+<<<<<<< HEAD
 - template: templates/build.yml
   parameters:
     buildConfiguration: 'Debug'
@@ -52,8 +66,36 @@ steps:
 - template: templates/build.yml
   parameters:
     buildConfiguration: 'Release'
+=======
+- task: DotNetCoreCLI@2
+  displayName: 'Build the project - $(buildConfiguration)'
+  inputs:
+    command: 'build'
+    arguments: '--no-restore --configuration $(buildConfiguration)'
+    projects: '**/*.csproj'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Run unit tests - $(buildConfiguration)'
+  inputs:
+    command: 'test'
+    arguments: '--no-build --configuration $(buildConfiguration)'
+    publishTestResults: true
+    projects: '**/*.Tests.csproj'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish the project - $(buildConfiguration)'
+  inputs:
+    command: 'publish'
+    projects: '**/*.csproj'
+    publishWebProjects: false
+    arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(buildConfiguration)'
+    zipAfterPublish: true
+>>>>>>> unit-tests
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
   condition: succeeded()
+<<<<<<< HEAD
   
+=======
+>>>>>>> unit-tests
